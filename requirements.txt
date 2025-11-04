@@ -1,0 +1,9 @@
+# Dependencies for the host script
+# These will be vendored into the vendor/ directory
+
+pyserial==3.5
+requests==2.32.3
+charset-normalizer==3.3.2
+idna==3.7
+urllib3==2.2.2
+certifi==2024.7.4
