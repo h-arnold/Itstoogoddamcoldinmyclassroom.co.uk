@@ -10,5 +10,5 @@ time.sleep(5)
 
 while True:
     temp = temperature()
-    print(f"temp:{temp}")
+    print(temp)
     time.sleep(30)
