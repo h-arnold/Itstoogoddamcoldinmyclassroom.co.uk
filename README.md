@@ -8,7 +8,7 @@ This system continuously monitors classroom temperature using a micro:bit:
 - Reads temperature every 30 seconds from micro:bit via serial
 - Calculates 20-minute rolling average
 - Posts data to Anvil HTTP endpoint with API key authentication
-- Pure Python implementation (no compiled modules)
+- Pure Python implementation (no compiled modules, Python 3.8+)
 - Self-contained ZIP distribution
 
 ## Repository Structure
@@ -115,7 +115,7 @@ The build workflow (`.github/workflows/build.yml`) automatically:
 
 ## Requirements
 
-- Python 3.7 or higher
+- Python 3.8 or higher
 - USB connection to micro:bit
 - Internet connection (for posting to Anvil)
 

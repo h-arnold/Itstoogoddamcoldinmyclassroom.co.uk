@@ -13,10 +13,10 @@ import shutil
 from pathlib import Path
 
 
-def run_command(cmd, description):
+def run_command(cmd_args, description):
     """Run a command and handle errors."""
     print(f"\n{description}...")
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    result = subprocess.run(cmd_args, capture_output=True, text=True)
     if result.returncode != 0:
         print(f"Error: {result.stderr}")
         return False
@@ -73,7 +73,11 @@ def main():
     ]
     
     print(f"\nInstalling packages: {', '.join(packages)}")
-    cmd = f"pip install --target {vendor_dir} --no-compile {' '.join(packages)}"
+    cmd = [
+        'pip', 'install',
+        '--target', str(vendor_dir),
+        '--no-compile'
+    ] + packages
     
     if not run_command(cmd, "Downloading and installing packages"):
         print("\nFailed to install packages. Please check your network connection.")

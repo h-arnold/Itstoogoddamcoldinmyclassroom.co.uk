@@ -7,7 +7,7 @@ Reads temperature every 30 seconds, averages over 20 minutes, and POSTs to Anvil
 
 import time
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from collections import deque
 
 try:
@@ -66,7 +66,7 @@ def post_to_anvil(api_key, endpoint, average_temp):
         payload = {
             'api_key': api_key,
             'temperature': average_temp,
-            'timestamp': datetime.utcnow().isoformat()
+            'timestamp': datetime.now(timezone.utc).isoformat()
         }
         
         response = requests.post(endpoint, json=payload, headers=headers, timeout=10)
@@ -88,7 +88,13 @@ def main():
     # Required configuration
     api_key = config.get('API_KEY')
     serial_port = config.get('SERIAL_PORT', '/dev/ttyACM0')
-    baud_rate = int(config.get('BAUD_RATE', '115200'))
+    
+    try:
+        baud_rate = int(config.get('BAUD_RATE', '115200'))
+    except ValueError:
+        print(f"Error: Invalid BAUD_RATE in config.txt. Must be a number.")
+        sys.exit(1)
+    
     anvil_endpoint = config.get('ANVIL_ENDPOINT')
     
     if not api_key:

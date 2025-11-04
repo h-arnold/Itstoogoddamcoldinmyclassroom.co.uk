@@ -63,7 +63,7 @@ Pure Python libraries bundled with the distribution:
 ### 5. CI/CD Pipeline (`.github/workflows/build.yml`)
 
 GitHub Actions workflow that:
-1. Sets up Python 3.7 environment
+1. Sets up Python 3.8 environment
 2. Installs dependencies to vendor/
 3. Removes compiled modules
 4. **Validates no compiled modules remain** (fails if any found)
@@ -98,7 +98,7 @@ Micro:bit → Serial → host_script.py → Buffer (40 readings) → Average →
 ## Platform Compatibility
 
 **Supported:**
-- Python 3.7+ on Linux, macOS, Windows
+- Python 3.8+ on Linux, macOS, Windows
 - Any system with USB serial support
 
 **Serial Port Names:**
