@@ -267,4 +267,108 @@ The complete server-side application (frontend, backend, database) is hosted on 
 ### 5.4. Testing and Quality Assurance
 - **Unit Tests**: Python script includes test mode using mock serial data.
 - **Integration Tests**: Anvil test environment with dummy data.
-- **End-to-End**: Documented procedure using real micro:bit and test API key
+- **End-to-End**: Documented procedure using real micro:bit and test API key.
+- **Performance**: Load testing for 100 concurrent classrooms (expected: <500ms response time).
+
+### 5.5. Teacher Setup Guide (README.txt)
+
+Contents:
+1. **Requirements**: Python 3.7+, BBC micro:bit, USB cable.
+2. **Step 1**: Flash micro:bit with provided `main.py` (screenshots for MakeCode web editor).
+3. **Step 2**: Install Python (links for Windows/Mac/Linux, verification with `python --version`).
+4. **Step 3**: Extract ZIP to Desktop or Documents folder.
+5. **Step 4**: Edit `config.txt` with API key from website Settings page and room name.
+6. **Step 5**: Run script:
+   - Windows: Double-click `run.bat` (creates a `.bat` launcher)
+   - Mac/Linux: Open Terminal, `cd` to folder, run `python3 host_script.py`
+7. **Verification**: Check `classroom-temp.log` for "Successfully logged temperature" message.
+8. **Troubleshooting**:
+   - "Serial port not found": Check USB connection, try manual `SERIAL_PORT` config
+   - "401 Unauthorized": Verify API key copied correctly
+   - "Permission denied" (Linux): Add user to `dialout` group
+   - Firewall blocking: Whitelist Python or add exception
+
+### 5.6. Monitoring and Support
+- Dashboard shows "System Health" indicator (all rooms, last seen times).
+- Email alerts for administrators if >10% of rooms offline >24 hours (optional).
+- Public status page showing Anvil uptime (optional).
+
+---
+
+## 6. Security Considerations
+
+1. **API Keys**: 
+   - Generated with cryptographically secure randomness (`secrets` module).
+   - Stored hashed in database (SHA256 with salt) - **wait, no**: stored plain for validation but never logged.
+   - Transmitted over HTTPS only.
+   - Rate limited to prevent brute force.
+
+2. **Share Links**:
+   - UUID4 provides 122 bits of entropy (infeasible to guess).
+   - Optional expiry prevents indefinite access.
+   - View counts allow monitoring for abuse.
+
+3. **Data Privacy**:
+   - Temperature data is non-personal but could identify patterns.
+   - Users can delete accounts and all associated data (GDPR compliance).
+   - No tracking or analytics beyond functional needs.
+
+4. **Input Validation**:
+   - All user inputs sanitized to prevent injection attacks.
+   - Temperature values bounded to prevent nonsense data.
+
+---
+
+## 7. Known Limitations and Future Enhancements
+
+### Current Limitations
+1. 20-minute averaging may miss brief temperature events (documented).
+2. Processor temperature offset varies slightly between micro:bit boards (calibration mitigates this).
+3. Host script requires Python installation (not always available on school computers).
+4. No mobile app (web interface is responsive but not native).
+
+### Optional Future Enhancements
+- **Real-time Dashboard**: WebSocket for live updates without refresh.
+- **Alerts**: Email/SMS notifications when temperature drops below threshold.
+- **Comparison View**: Overlay multiple rooms on single chart.
+- **Historical Reports**: Automated weekly summary emails.
+- **API for Integrations**: Allow third-party tools to access data.
+- **Offline Mode**: Desktop app with local database syncing when online.
+- **Multi-Sensor Support**: External temperature probes via I2C.
+
+---
+
+## 8. Deployment Checklist
+
+### Pre-Launch
+- [ ] Anvil app deployed to production environment
+- [ ] Database tables created with indexes
+- [ ] Background task scheduled for data retention
+- [ ] Rate limiting configured and tested
+- [ ] GitHub Action tested with release candidate
+- [ ] Teacher setup guide reviewed by non-technical user
+- [ ] End-to-end test with real hardware
+- [ ] Load testing completed (100 concurrent users)
+- [ ] Error handling verified (disconnect scenarios)
+- [ ] Accessibility audit (keyboard navigation, screen reader)
+
+### Launch
+- [ ] Domain configured (itstoodamncoldinmyclassroom.co.uk)
+- [ ] SSL certificate verified
+- [ ] Initial user accounts created for pilot teachers
+- [ ] Support email/forum established
+- [ ] Announcement materials prepared
+
+### Post-Launch
+- [ ] Monitor error logs daily (first week)
+- [ ] Collect user feedback via survey
+- [ ] Performance metrics tracked (response times, uptime)
+- [ ] Bug fixes prioritized and released
+- [ ] Documentation updated based on common questions
+
+---
+
+## Document Version
+**Version**: 2.0  
+**Date**: 2025-11-04  
+**Changes**: Incorporated critical fixes for temperature calibration, error handling, data retention, serial port detection, atomic file writes, share link expiry, CSV export, endpoint configuration, and comprehensive documentation.
