@@ -1,5 +1,5 @@
 # main.py for the micro:bit
-from microbit import *
+from microbit import uart, temperature
 import time
 
 uart.init(baudrate=115200)
