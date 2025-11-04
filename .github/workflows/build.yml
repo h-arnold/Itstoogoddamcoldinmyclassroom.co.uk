@@ -49,7 +49,7 @@ jobs:
     - name: Verify required files exist
       run: |
         echo "Checking required files..."
-        for file in host_script.py config.txt build.py vendor_dependencies.py requirements.txt; do
+        for file in src/host_script.py src/config.txt build.py vendor_dependencies.py requirements.txt; do
           if [ ! -f "$file" ]; then
             echo "ERROR: Required file missing: $file"
             exit 1
