@@ -19,6 +19,16 @@ except ImportError as e:
     sys.exit(1)
 
 
+# Configuration constants
+READING_INTERVAL_SECONDS = 30  # Read temperature every 30 seconds
+BUFFER_DURATION_MINUTES = 20   # Average over 20 minutes
+POST_INTERVAL_MINUTES = 20     # Post to Anvil every 20 minutes
+
+# Calculated constants
+BUFFER_SIZE = (BUFFER_DURATION_MINUTES * 60) // READING_INTERVAL_SECONDS  # 40 readings
+POST_INTERVAL_SECONDS = POST_INTERVAL_MINUTES * 60  # 1200 seconds
+
+
 def load_config(config_path="config.txt"):
     """Load configuration from config file."""
     config = {}
@@ -118,11 +128,11 @@ def main():
         print(f"Error: Could not open serial port {serial_port}: {e}")
         sys.exit(1)
     
-    # Temperature readings buffer (20 minutes = 40 readings at 30s intervals)
-    readings_buffer = deque(maxlen=40)
+    # Temperature readings buffer
+    readings_buffer = deque(maxlen=BUFFER_SIZE)
     
     last_post_time = time.time()
-    post_interval = 20 * 60  # 20 minutes in seconds
+    post_interval = POST_INTERVAL_SECONDS
     
     try:
         while True:
@@ -146,8 +156,8 @@ def main():
                     # Clear buffer after successful post
                     readings_buffer.clear()
             
-            # Wait 30 seconds before next reading
-            time.sleep(30)
+            # Wait before next reading
+            time.sleep(READING_INTERVAL_SECONDS)
             
     except KeyboardInterrupt:
         print("\nStopping temperature monitoring...")

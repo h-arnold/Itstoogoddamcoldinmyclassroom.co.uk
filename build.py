@@ -7,7 +7,7 @@ This script bundles:
 - config.txt (template)
 - vendor/ directory with pure Python dependencies
 
-The resulting ZIP can be extracted and run on any system with Python 3.7+
+The resulting ZIP can be extracted and run on any system with Python 3.8+
 """
 
 import zipfile
