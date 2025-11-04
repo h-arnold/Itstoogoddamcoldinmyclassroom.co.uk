@@ -25,7 +25,33 @@ A complete temperature monitoring system for classrooms using BBC micro:bit hard
 ### 2. Software
 - **micro:bit Code** (`microbit/main.py`): MicroPython script for temperature reading
 - **Host Script** (`src/host_script.py`): Python 3.7+ application for data collection and upload
-- **Anvil Web App**: Cloud-hosted dashboard (not in this repo)
+- **Anvil Web App** (`anvil/`): Cloud-hosted dashboard with server-side Python code
+
+#### Anvil Web Application Components
+
+The `anvil/` directory contains the complete server-side implementation:
+
+**Server Modules**:
+- `temperature_logging.py` - HTTP endpoint for receiving data from host scripts
+- `server_functions.py` - Callable functions for dashboard features
+- `background_tasks.py` - Scheduled data retention tasks
+
+**Key Features**:
+- User authentication and API key management
+- Real-time temperature data ingestion with rate limiting
+- Interactive dashboard with Plotly charts
+- Public sharing links with optional expiry
+- CSV data export
+- Automatic cleanup of old readings (90+ days)
+
+**Data Model**:
+- **Users** - Teacher accounts (Anvil Users service)
+- **ApiKeys** - Authentication tokens for host scripts
+- **Rooms** - Classroom tracking
+- **Readings** - Temperature data with min/max/anomaly flags
+- **ShareLinks** - Public access tokens with view counts
+
+See `anvil/README.md` for detailed setup and deployment instructions.
 
 ### 3. Data Flow
 
@@ -45,6 +71,12 @@ micro:bit → USB Serial → Host Script → Internet → Anvil Web App → Dash
 ├── microbit/                 # micro:bit firmware
 │   ├── main.py               # MicroPython code
 │   └── README.md
+├── anvil/                    # Anvil web application
+│   ├── server_code/          # Server-side Python modules
+│   │   ├── temperature_logging.py    # HTTP endpoint
+│   │   ├── server_functions.py       # Callable functions
+│   │   └── background_tasks.py       # Scheduled tasks
+│   └── README.md             # Anvil setup guide
 ├── docs/                     # Documentation
 │   ├── classroom_temp_spec.md   # Complete technical specification
 │   ├── SETUP_GUIDE.md           # User setup instructions

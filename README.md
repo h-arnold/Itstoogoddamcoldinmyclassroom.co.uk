@@ -21,6 +21,9 @@ This system continuously monitors classroom temperature using a micro:bit:
 ├── microbit/
 │   ├── main.py               # MicroPython code for micro:bit
 │   └── README.md             # micro:bit setup instructions
+├── anvil/                    # Anvil web application code
+│   ├── server_code/          # Server-side Python modules
+│   └── README.md             # Anvil setup guide
 ├── docs/
 │   ├── README.md             # Documentation index
 │   ├── SETUP_GUIDE.md        # Complete setup guide for teachers

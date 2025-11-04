@@ -104,28 +104,20 @@ python3 build.py
 2. Find `config.txt` and open it in a text editor
 3. Fill in the required values:
 
-```ini
-[Settings]
-# Get this from the website Settings page after creating an account
-API_KEY = your_api_key_here
+```
+# API key for Anvil HTTP endpoint
+API_KEY=YOUR_API_KEY_HERE
 
-# Choose a unique name for your classroom (e.g., "Room_B12" or "Physics_Lab")
-ROOM_NAME = your_room_name
+# Anvil HTTP endpoint URL
+ANVIL_ENDPOINT=https://your-app.anvil.app/_/api/your-endpoint
 
-# This URL is provided when you create your account
-ANVIL_ENDPOINT = https://your-app.anvil.app/_/api/log_temp
+# Serial port for micro:bit (default: /dev/ttyACM0 on Linux)
+# Windows example: COM3
+# Mac example: /dev/cu.usbmodem14201
+SERIAL_PORT=/dev/ttyACM0
 
-# Leave blank for automatic detection, or specify manually:
-# Windows: COM3, COM4, etc.
-# Linux: /dev/ttyACM0
-# macOS: /dev/cu.usbmodem14201
-SERIAL_PORT = 
-
-# Calibration offset (processor temp is typically 2-3°C higher than ambient)
-TEMP_OFFSET = -2.5
-
-# Reading interval (default: 1200 seconds = 20 minutes)
-INTERVAL_SECONDS = 1200
+# Baud rate for serial connection (default: 115200)
+BAUD_RATE=115200
 ```
 
 4. Save the file
