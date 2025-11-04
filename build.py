@@ -60,26 +60,26 @@ def create_zip_bundle(output_filename="microbit_temp_monitor.zip"):
         sys.exit(1)
     print("  ✓ No compiled modules found")
     
-    # Files to include
+    # Files to include from src/
     files_to_bundle = [
-        "host_script.py",
-        "config.txt",
+        ("src/host_script.py", "host_script.py"),
+        ("src/config.txt", "config.txt"),
     ]
     
     # Check required files exist
     print("\nChecking required files...")
     missing_files = []
-    for filename in files_to_bundle:
-        filepath = script_dir / filename
+    for src_path, _ in files_to_bundle:
+        filepath = script_dir / src_path
         if not filepath.exists():
-            missing_files.append(filename)
+            missing_files.append(src_path)
         else:
-            print(f"  ✓ {filename}")
+            print(f"  ✓ {src_path}")
     
     if missing_files:
         print(f"\nError: Missing required files:")
-        for filename in missing_files:
-            print(f"  - {filename}")
+        for src_path in missing_files:
+            print(f"  - {src_path}")
         sys.exit(1)
     
     # Create ZIP
@@ -87,11 +87,11 @@ def create_zip_bundle(output_filename="microbit_temp_monitor.zip"):
     print(f"\nCreating ZIP bundle: {output_filename}")
     
     with zipfile.ZipFile(output_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        # Add main files
-        for filename in files_to_bundle:
-            filepath = script_dir / filename
-            print(f"  Adding: {filename}")
-            zipf.write(filepath, filename)
+        # Add main files from src/
+        for src_path, dest_name in files_to_bundle:
+            filepath = script_dir / src_path
+            print(f"  Adding: {src_path} -> {dest_name}")
+            zipf.write(filepath, dest_name)
         
         # Add vendor directory
         print(f"  Adding: vendor/ directory")

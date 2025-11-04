@@ -277,11 +277,21 @@ python3 build.py
 
 ```bash
 # Validate syntax
-python3 -m py_compile host_script.py
+python3 -m py_compile src/host_script.py
 
 # Test config loading
-python3 -c "from host_script import load_config; print(load_config())"
+cd src && python3 -c "from host_script import load_config; print(load_config())"
 
 # Dry run (will fail without micro:bit, but tests config)
-python3 host_script.py
+cd src && python3 host_script.py
 ```
+
+## Repository Structure
+
+The source repository is organized as follows:
+- `src/` - Host script source code
+- `microbit/` - micro:bit MicroPython code
+- `docs/` - Documentation
+- `vendor/` - Vendored dependencies
+
+When built, the ZIP distribution contains files at the root for user convenience.

@@ -15,17 +15,28 @@ This system continuously monitors classroom temperature using a micro:bit:
 
 ```
 .
-├── host_script.py           # Main monitoring script
-├── config.txt               # Configuration template
-├── vendor/                  # Vendored pure Python dependencies
-│   ├── serial/              # pyserial
-│   ├── requests/            # requests library
-│   └── ...                  # Other dependencies
-├── build.py                 # Builds distributable ZIP
-├── vendor_dependencies.py   # Downloads and vendors dependencies
-├── requirements.txt         # Python dependencies
+├── src/
+│   ├── host_script.py        # Main monitoring script
+│   └── config.txt            # Configuration template
+├── microbit/
+│   ├── main.py               # MicroPython code for micro:bit
+│   └── README.md             # micro:bit setup instructions
+├── anvil/                    # Anvil web application code
+│   ├── server_code/          # Server-side Python modules
+│   └── README.md             # Anvil setup guide
+├── docs/
+│   ├── README.md             # Documentation index
+│   ├── SETUP_GUIDE.md        # Complete setup guide for teachers
+│   └── classroom_temp_spec.md # Technical specification
+├── vendor/                   # Vendored pure Python dependencies
+│   ├── serial/               # pyserial
+│   ├── requests/             # requests library
+│   └── ...                   # Other dependencies
+├── build.py                  # Builds distributable ZIP
+├── vendor_dependencies.py    # Downloads and vendors dependencies
+├── requirements.txt          # Python dependencies
 └── .github/workflows/
-    └── build.yml            # CI/CD validation and build
+    └── build.yml             # CI/CD validation and build
 ```
 
 ## Quick Start
@@ -53,7 +64,7 @@ python3 build.py
 
 ## Configuration
 
-1. Edit `config.txt`:
+1. Edit `src/config.txt` (in the distributed ZIP it will be at the root):
    ```ini
    API_KEY=your_actual_api_key_here
    ANVIL_ENDPOINT=https://your-app.anvil.app/_/api/your-endpoint
@@ -83,16 +94,27 @@ Press `Ctrl+C` to stop.
 
 ## Micro:bit Setup
 
-Your micro:bit should be programmed to output temperature readings via serial. Example MicroPython code:
+Flash your micro:bit with the code in `microbit/main.py`. See [microbit/README.md](microbit/README.md) for detailed instructions.
+
+The micro:bit code outputs temperature readings via serial in the format `temp:XX`:
 
 ```python
 from microbit import *
+import time
+
+uart.init(baudrate=115200)
+
+# Discard the initial reading to stabilise
+_ = temperature()
+time.sleep(5)
 
 while True:
     temp = temperature()
-    print(temp)
-    sleep(1000)  # 1 second
+    print(f"temp:{temp}")
+    time.sleep(30)
 ```
+
+For complete setup instructions, see [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md).
 
 ## Dependencies
 

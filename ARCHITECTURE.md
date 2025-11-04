@@ -6,7 +6,7 @@ This project implements a temperature monitoring system that reads data from a m
 
 ## Components
 
-### 1. Host Script (`host_script.py`)
+### 1. Host Script (`src/host_script.py`)
 
 The main monitoring script with these responsibilities:
 
@@ -22,7 +22,7 @@ The main monitoring script with these responsibilities:
 - Graceful error handling for network and serial issues
 - Clean shutdown on Ctrl+C
 
-### 2. Configuration (`config.txt`)
+### 2. Configuration (`src/config.txt`)
 
 Template configuration file with:
 - `API_KEY`: Authentication for Anvil endpoint
@@ -30,7 +30,19 @@ Template configuration file with:
 - `SERIAL_PORT`: Device path for micro:bit connection
 - `BAUD_RATE`: Serial communication speed (default: 115200)
 
-### 3. Vendored Dependencies (`vendor/`)
+### 3. micro:bit Code (`microbit/main.py`)
+
+MicroPython script that runs on the BBC micro:bit:
+
+- Initializes UART at 115200 baud
+- Discards first temperature reading to avoid warm-up bias
+- Reads processor temperature every 30 seconds
+- Outputs formatted data: `temp:XX`
+- Runs continuously in a loop
+
+See [microbit/README.md](microbit/README.md) for flashing instructions.
+
+### 4. Vendored Dependencies (`vendor/`)
 
 Pure Python libraries bundled with the distribution:
 
@@ -47,7 +59,7 @@ Pure Python libraries bundled with the distribution:
 - Works on systems without internet access
 - Eliminates dependency conflicts
 
-### 4. Build System
+### 5. Build System
 
 **`vendor_dependencies.py`**: Downloads and prepares dependencies
 - Installs packages to vendor/ directory
@@ -56,11 +68,11 @@ Pure Python libraries bundled with the distribution:
 
 **`build.py`**: Creates distributable ZIP
 - Validates no compiled modules present
-- Bundles host_script.py, config.txt, vendor/
+- Bundles src/host_script.py, src/config.txt, vendor/
 - Creates timestamped ZIP file
 - Fails build if validation fails
 
-### 5. CI/CD Pipeline (`.github/workflows/build.yml`)
+### 6. CI/CD Pipeline (`.github/workflows/build.yml`)
 
 GitHub Actions workflow that:
 1. Sets up Python 3.8 environment
@@ -72,6 +84,18 @@ GitHub Actions workflow that:
 7. Shows bundle contents
 
 **Critical Feature**: Build fails if ANY compiled modules are detected, ensuring pure Python distribution.
+
+### 7. Documentation (`docs/`)
+
+Complete documentation set including:
+
+- **classroom_temp_spec.md**: Full technical specification
+- **SETUP_GUIDE.md**: Comprehensive setup instructions for teachers
+- **README.md**: Documentation index
+
+Additional documentation:
+- **microbit/README.md**: micro:bit-specific setup
+- **src/README.md**: Source code overview
 
 ## Data Flow
 
