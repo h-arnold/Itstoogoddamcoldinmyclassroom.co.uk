@@ -19,8 +19,6 @@ The main Python script that:
 
 Configuration template with the following settings:
 
-```ini
-[Settings]
 API_KEY = your_api_key_here
 ROOM_NAME = your_room_name
 ANVIL_ENDPOINT = https://your-app.anvil.app/_/api/log_temp
