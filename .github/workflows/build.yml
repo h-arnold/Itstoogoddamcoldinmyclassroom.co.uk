@@ -1,0 +1,75 @@
+name: Build and Validate Bundle
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.7'
+    
+    - name: Install dependencies to vendor directory
+      run: |
+        echo "Installing dependencies to vendor directory..."
+        pip install --target vendor --no-compile -r requirements.txt
+    
+    - name: Remove compiled modules from vendor
+      run: |
+        echo "Checking for and removing compiled modules..."
+        # Remove .so files (Linux/Mac compiled modules)
+        find vendor -name "*.so" -type f -delete
+        # Remove .pyd files (Windows compiled modules)  
+        find vendor -name "*.pyd" -type f -delete
+    
+    - name: Check for compiled modules
+      run: |
+        echo "Verifying no compiled modules remain..."
+        COMPILED_MODULES=$(find vendor -name "*.so" -o -name "*.pyd")
+        
+        if [ -n "$COMPILED_MODULES" ]; then
+          echo "ERROR: Compiled modules found in vendor directory:"
+          echo "$COMPILED_MODULES"
+          exit 1
+        else
+          echo "✓ No compiled modules found. Build validation passed!"
+        fi
+    
+    - name: Verify required files exist
+      run: |
+        echo "Checking required files..."
+        for file in host_script.py config.txt build.py vendor_dependencies.py requirements.txt; do
+          if [ ! -f "$file" ]; then
+            echo "ERROR: Required file missing: $file"
+            exit 1
+          fi
+          echo "✓ Found: $file"
+        done
+    
+    - name: Build ZIP bundle
+      run: |
+        echo "Building distributable ZIP..."
+        python build.py
+    
+    - name: Upload ZIP artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: microbit-temp-monitor
+        path: microbit_temp_monitor_*.zip
+        retention-days: 90
+    
+    - name: Show bundle contents
+      run: |
+        echo "Bundle contents:"
+        unzip -l microbit_temp_monitor_*.zip | head -50
