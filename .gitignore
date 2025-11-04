@@ -36,6 +36,11 @@ microbit_temp_monitor*.zip
 vendor/*
 !vendor/README.md
 
+# Runtime generated files
+pending_uploads.json
+classroom-temp.log
+classroom-temp.log.*
+
 # IDE
 .vscode/
 .idea/

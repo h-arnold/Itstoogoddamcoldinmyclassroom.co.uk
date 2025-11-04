@@ -3,11 +3,13 @@
 Build script to create a self-contained ZIP distribution.
 
 This script bundles:
-- host_script.py
-- config.txt (template)
+- host_script.py (main monitoring script)
+- config.txt (configuration template)
+- README.txt (setup instructions for users)
+- microbit/ directory (micro:bit MicroPython code and documentation)
 - vendor/ directory with pure Python dependencies
 
-The resulting ZIP can be extracted and run on any system with Python 3.8+
+The resulting ZIP can be extracted and run on any system with Python 3.7+
 """
 
 import zipfile
@@ -64,6 +66,12 @@ def create_zip_bundle(output_filename="microbit_temp_monitor.zip"):
     files_to_bundle = [
         "host_script.py",
         "config.txt",
+        "README.txt",
+    ]
+    
+    # Directories to include
+    dirs_to_bundle = [
+        "microbit",
     ]
     
     # Check required files exist
@@ -76,10 +84,26 @@ def create_zip_bundle(output_filename="microbit_temp_monitor.zip"):
         else:
             print(f"  ✓ {filename}")
     
+    # Check required directories exist
+    print("\nChecking required directories...")
+    missing_dirs = []
+    for dirname in dirs_to_bundle:
+        dirpath = script_dir / dirname
+        if not dirpath.exists() or not dirpath.is_dir():
+            missing_dirs.append(dirname)
+        else:
+            print(f"  ✓ {dirname}/")
+    
     if missing_files:
         print(f"\nError: Missing required files:")
         for filename in missing_files:
             print(f"  - {filename}")
+        sys.exit(1)
+    
+    if missing_dirs:
+        print(f"\nError: Missing required directories:")
+        for dirname in missing_dirs:
+            print(f"  - {dirname}/")
         sys.exit(1)
     
     # Create ZIP
@@ -92,6 +116,15 @@ def create_zip_bundle(output_filename="microbit_temp_monitor.zip"):
             filepath = script_dir / filename
             print(f"  Adding: {filename}")
             zipf.write(filepath, filename)
+        
+        # Add directories
+        for dirname in dirs_to_bundle:
+            dirpath = script_dir / dirname
+            print(f"  Adding: {dirname}/ directory")
+            for filepath in dirpath.rglob('*'):
+                if filepath.is_file():
+                    arcname = filepath.relative_to(script_dir)
+                    zipf.write(filepath, arcname)
         
         # Add vendor directory
         print(f"  Adding: vendor/ directory")

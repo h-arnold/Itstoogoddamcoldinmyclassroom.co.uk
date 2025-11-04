@@ -1,16 +1,20 @@
-# Configuration file for micro:bit temperature monitoring
-# Edit this file with your actual values before running
+[Settings]
+# Required: Your Anvil API key from the Settings page
+API_KEY = your_api_key_here
 
-# API key for Anvil HTTP endpoint
-API_KEY=YOUR_API_KEY_HERE
+# Required: Room identifier (e.g., "Room_B12" or "Physics_Lab")
+ROOM_NAME = your_room_name
 
-# Anvil HTTP endpoint URL
-ANVIL_ENDPOINT=https://your-app.anvil.app/_/api/your-endpoint
+# Required: Anvil HTTP endpoint URL
+ANVIL_ENDPOINT = https://your-app.anvil.app/_/api/log_temp
 
-# Serial port for micro:bit (default: /dev/ttyACM0 on Linux)
-# Windows example: COM3
-# Mac example: /dev/cu.usbmodem14201
-SERIAL_PORT=/dev/ttyACM0
+# Optional: Serial port (leave blank for auto-detection)
+# Windows: COM3, Linux: /dev/ttyACM0, macOS: /dev/cu.usbmodem14201
+SERIAL_PORT = 
 
-# Baud rate for serial connection (default: 115200)
-BAUD_RATE=115200
+# Optional: Temperature offset for calibration (default: -2.5)
+# Adjust based on comparison with reference thermometer
+TEMP_OFFSET = -2.5
+
+# Optional: Reading interval in seconds (default: 1200 for 20 minutes)
+INTERVAL_SECONDS = 1200
